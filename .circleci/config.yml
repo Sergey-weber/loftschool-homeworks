@@ -1,4 +1,5 @@
 version: 2
+<<<<<<< HEAD
 
 defaults: &defaults
   working_directory: ~/app
@@ -46,11 +47,45 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/
+=======
+jobs:
+  build:
+    working_directory: ~/app
+    docker:
+      - image: cypress/base:8
+        environment:
+          TERM: xterm
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - yarn-packages-v2-{{ checksum "yarn.lock" }}
+            - v2-deps-{{ .Branch }}
+            - v2-deps
+
+      - run:
+          name: Install Dependencies
+          command: yarn install
+
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-v2-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.npm
+            - ~/.cache
+
+      - run:
+          name: Build app
+          command: yarn build
+>>>>>>> cd0128e73701628872e98c8fb07dd4fd4f94ee50
 
       - run:
           name: Unit tests
           command: yarn test
 
+<<<<<<< HEAD
   integration-tests:
     <<: *defaults
     steps:
@@ -58,6 +93,8 @@ jobs:
       - attach_workspace:
           at: ~/
 
+=======
+>>>>>>> cd0128e73701628872e98c8fb07dd4fd4f94ee50
       - run:
           name: Start background app
           command: yarn start
@@ -67,6 +104,7 @@ jobs:
           name: Cypress tests
           command: yarn run cypress:run
 
+<<<<<<< HEAD
   build:
     <<: *defaults
     steps:
@@ -93,6 +131,8 @@ jobs:
       - attach_workspace:
           at: build
 
+=======
+>>>>>>> cd0128e73701628872e98c8fb07dd4fd4f94ee50
       - run:
           name: Set PR number
           command: |
@@ -101,6 +141,13 @@ jobs:
             echo $CIRCLE_PR_NUMBER
 
       - run:
+<<<<<<< HEAD
+=======
+          name: Remove service workers
+          command: rm ~/app/build/service-worker.js
+
+      - run:
+>>>>>>> cd0128e73701628872e98c8fb07dd4fd4f94ee50
           name: Remove old build
           command:
             ssh -o StrictHostKeyChecking=no root@51.15.83.43 rm -rf
@@ -109,7 +156,11 @@ jobs:
       - run:
           name: Copy new build
           command:
+<<<<<<< HEAD
             scp -v -o StrictHostKeyChecking=no -r build
+=======
+            scp -v -o StrictHostKeyChecking=no -r ~/app/build
+>>>>>>> cd0128e73701628872e98c8fb07dd4fd4f94ee50
             root@51.15.83.43:/var/www/sep-pr-$CIRCLE_PR_NUMBER
 
       - run:
@@ -117,6 +168,7 @@ jobs:
           command:
             ssh -o StrictHostKeyChecking=no root@51.15.83.43
             "/var/www/setup-server/index.js --address sep-pr-$CIRCLE_PR_NUMBER"
+<<<<<<< HEAD
 
 workflows:
   version: 2
@@ -141,3 +193,5 @@ workflows:
             - build
             - unit-tests
             - integration-tests
+=======
+>>>>>>> cd0128e73701628872e98c8fb07dd4fd4f94ee50

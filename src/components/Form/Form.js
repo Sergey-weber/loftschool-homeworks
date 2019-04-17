@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
+import Input from './Input/Input'
 import './Form.css'
-import bond from './img/bond_approve.jpg'
+import bond from './assets/bond_approve.jpg'
 
 export default class Form extends Component {
 
@@ -59,24 +60,39 @@ export default class Form extends Component {
                     !this.state.validate ?
                 <form className="form">
                     <h1>Введите свои данные, агент</h1>
-                    <p className="field">
-                        <label className="field__label" htmlFor="firstname">
-                            <span className="field-label">Имя</span>
-                        </label>
-                        <input name="firstname" className="field__input field-input t-input-firstname" type="text"
-                               value={this.state.name} onChange={this.handleName}/>
-                        <span className="field__error field-error t-error-firstname">{this.state.errorName}</span></p>
-                    <p className="field">
-                        <label className="field__label" htmlFor="lastname"><span className="field-label">Фамилия</span></label>
-                        <input name="lastname" className="field__input field-input t-input-lastname" type="text"
-                               value={this.state.lastName} onChange={this.handleName}/>
-                        <span className="field__error field-error t-error-lastname">{this.state.errorLastName}</span></p>
-                    <p className="field">
-                        <label className="field__label" htmlFor="password">
-                        <span className="field-label">Пароль</span></label>
-                        <input name="password" className="field__input field-input t-input-password" type="password"
-                               value={this.state.password} onChange={this.handleName}/>
-                        <span className="field__error field-error t-error-password">{this.state.errorPassword}</span></p>
+                       <Input
+                            title="Имя"
+                            name="firstname"
+                            value={this.state.name}
+                            onChange={this.handleName}
+                            errorName={this.state.errorName}
+                            classError="field__error field-error t-error-firstname"
+                            classInput="field__input field-input t-input-firstname"
+                            type="text"
+                       />
+
+                    <Input
+                        title="Фамилия"
+                        name="lastname"
+                        value={this.state.lastName}
+                        onChange={this.handleName}
+                        errorName={this.state.errorLastName}
+                        classError="field__error field-error t-error-lastname"
+                        classInput="field__input field-input t-input-lastname"
+                        type="text"
+                    />
+
+                    <Input
+                        title="Пароль"
+                        name="password"
+                        value={this.state.password}
+                        onChange={this.handleName}
+                        errorName={this.state.errorPassword}
+                        classError="field__error field-error t-error-password"
+                        classInput="field__input field-input t-input-lastname"
+                        type="password"
+                    />
+
                     <div className="form__buttons">
                         <input type="submit" onClick={this.handleSubmit} className="button t-submit" value="Проверить"/>
                     </div>

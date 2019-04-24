@@ -43,6 +43,8 @@ class LoginForm extends PureComponent {
     const { values } = this.state;
     const { authorizeError } = this.props;
 
+    console.log(this.props)
+
     return (
       <div className="login-form">
         <h1 className="login-form-title">Авторизация</h1>

@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
+import './App.css';
+import Todo from '../Todo';
 
-export default class App extends React.Component {
-	render() {
-		return (
-			<div className="App">
-				<p className="description">Миру-мир, студентам - beer.</p>
-			</div>
-		)
-	}
+ export default class App extends PureComponent {
+    render() {
+        return (
+            <main className="main">
+                <div className="main__cell">
+                    <Todo />
+                </div>
+            </main>
+        );
+    }
 }

@@ -1,5 +1,6 @@
 version: 2
 
+<<<<<<< HEAD
 defaults: &defaults
   working_directory: ~/app
   docker:
@@ -13,17 +14,37 @@ jobs:
     steps:
       - checkout
       - restore_cache: &restore_cache
+=======
+jobs:
+  build:
+    working_directory: ~/app
+    docker:
+      - image: cypress/base:8
+        environment:
+          TERM: xterm
+    steps:
+      - checkout
+      - restore_cache:
+>>>>>>> 16079a7e6f9a29ccda68b6ef2e9cb5b2619f7ec2
           keys:
             - yarn-packages-v12-{{ checksum "yarn.lock" }}
             - yarn-packages-v12-
 
+<<<<<<< HEAD
       - run: &install_deps
+=======
+      - run:
+>>>>>>> 16079a7e6f9a29ccda68b6ef2e9cb5b2619f7ec2
           name: Install Dependencies
           command: |
             yarn install
             yarn autoclean --force
 
+<<<<<<< HEAD
       - save_cache: &save_cache
+=======
+      - save_cache:
+>>>>>>> 16079a7e6f9a29ccda68b6ef2e9cb5b2619f7ec2
           name: Save Yarn Package Cache
           key: yarn-packages-v12-{{ checksum "yarn.lock" }}
           paths:
@@ -34,6 +55,7 @@ jobs:
           name: Run linters
           command: yarn run lint
 
+<<<<<<< HEAD
       - persist_to_workspace:
           root: ~/
           paths:
@@ -61,10 +83,19 @@ jobs:
       - run:
           name: Start background app
           command: yarn start
+=======
+      - run:
+          name: Start background app
+          command: |
+            if [[ -f ./cypress/integration/homework.spec.js ]] && [[ -s ./cypress/integration/homework.spec.js ]]
+              then yarn start
+            fi
+>>>>>>> 16079a7e6f9a29ccda68b6ef2e9cb5b2619f7ec2
           background: true
 
       - run:
           name: Cypress tests
+<<<<<<< HEAD
           command: yarn run cypress:run
 
   build:
@@ -92,6 +123,12 @@ jobs:
     steps:
       - attach_workspace:
           at: build
+=======
+          command: |
+            if [[ -f ./cypress/integration/homework.spec.js ]] && [[ -s ./cypress/integration/homework.spec.js ]]
+              then yarn run cypress:run
+            fi
+>>>>>>> 16079a7e6f9a29ccda68b6ef2e9cb5b2619f7ec2
 
       - run:
           name: Set PR number
@@ -101,6 +138,7 @@ jobs:
             echo $CIRCLE_PR_NUMBER
 
       - run:
+<<<<<<< HEAD
           name: Remove old build
           command:
             ssh -o StrictHostKeyChecking=no root@51.15.83.43 rm -rf
@@ -141,3 +179,31 @@ workflows:
             - build
             - unit-tests
             - integration-tests
+=======
+          name: Build app
+          command: |
+            if [[ $CIRCLE_PR_NUMBER ]]
+              then yarn build
+            fi
+
+      - run:
+          name: Remove old build
+          command: |
+            if [[ $CIRCLE_PR_NUMBER ]]
+              then ssh -o StrictHostKeyChecking=no root@51.15.83.43 rm -rf /var/www/sep-pr-$CIRCLE_PR_NUMBER
+            fi
+
+      - run:
+          name: Copy new build
+          command: |
+            if [[ $CIRCLE_PR_NUMBER ]]
+              then scp -v -o StrictHostKeyChecking=no -r build root@51.15.83.43:/var/www/sep-pr-$CIRCLE_PR_NUMBER
+            fi
+
+      - run:
+          name: Create dns zone
+          command: |
+            if [[ $CIRCLE_PR_NUMBER ]]
+              then ssh -o StrictHostKeyChecking=no root@51.15.83.43 "/var/www/setup-server/index.js --address sep-pr-$CIRCLE_PR_NUMBER"
+            fi
+>>>>>>> 16079a7e6f9a29ccda68b6ef2e9cb5b2619f7ec2
